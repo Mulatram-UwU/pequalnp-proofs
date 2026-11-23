@@ -15,4 +15,4 @@ theorem PEqualNP.Outside.L_meta_475 : ∀ φ : PEqualNP.Search.CNF, ∃ u v : PE
   simp only [PEqualNP.MetaComplexity.CoverPromise.cvcGraph,
     PEqualNP.MetaComplexity.CoverPromise.satGraph,
     PEqualNP.MetaComplexity.CoverPromise.satAdj]
-  exact ⟨rfl, by decide, hmem⟩
+  exact ⟨trivial, by decide, hmem⟩
