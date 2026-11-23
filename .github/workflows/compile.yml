@@ -1,0 +1,31 @@
+name: compile
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: branch or commit in this fork
+        required: true
+      module:
+        description: Lean module to build, e.g. PEqualNP.Outside.L_meta_497
+        required: true
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+      - name: Install elan
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(cat lean/lean-toolchain)"
+      - name: Fetch prebuilt Mathlib
+        working-directory: lean
+        run: lake exe cache get
+      - name: Build module
+        working-directory: lean
+        run: lake build "${{ inputs.module }}"
